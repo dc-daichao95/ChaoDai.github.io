@@ -4,11 +4,11 @@
   
     
     <entry>
-      <title></title>
-      <link href="/2019/07/27/runc/"/>
-      <url>/2019/07/27/runc/</url>
+      <title>容器漏洞CVE-cve-2019-5736</title>
+      <link href="/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/"/>
+      <url>/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/</url>
       
-        <content type="html"><![CDATA[<hr><h2 id="RunC"><a href="#RunC" class="headerlink" title="RunC"></a>RunC</h2>]]></content>
+        <content type="html"><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>2019年2月11日，runC的维护团队报告了一个新发现的漏洞，该漏洞最初由Adam Iwaniuk和Borys Poplawski发现。该漏洞编号为CVE-2019-5736，漏洞影响在默认设置下运行的Docker容器，并且攻击者可以使用它来获得主机上的root级访问权限。</p>]]></content>
       
       
       
