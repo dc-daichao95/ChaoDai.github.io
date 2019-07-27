@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://dc-daichao95.github.io/"/>
-  <updated>2019-07-27T04:19:35.198Z</updated>
+  <updated>2019-07-27T04:26:42.724Z</updated>
   <id>https://dc-daichao95.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>test</title>
+    <link href="https://dc-daichao95.github.io/2019/07/27/test/"/>
+    <id>https://dc-daichao95.github.io/2019/07/27/test/</id>
+    <published>2019-07-27T04:26:04.000Z</published>
+    <updated>2019-07-27T04:26:42.724Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;123&lt;/p&gt;
+
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>容器漏洞CVE-cve-2019-5736</title>
