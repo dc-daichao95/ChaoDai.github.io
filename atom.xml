@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://dc-daichao95.github.io/"/>
-  <updated>2019-07-27T04:26:42.724Z</updated>
+  <updated>2019-07-29T12:20:13.688Z</updated>
   <id>https://dc-daichao95.github.io/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>test</title>
-    <link href="https://dc-daichao95.github.io/2019/07/27/test/"/>
-    <id>https://dc-daichao95.github.io/2019/07/27/test/</id>
-    <published>2019-07-27T04:26:04.000Z</published>
-    <updated>2019-07-27T04:26:42.724Z</updated>
+    <title>markdown语法</title>
+    <link href="https://dc-daichao95.github.io/2019/07/29/markdown-yu-fa/"/>
+    <id>https://dc-daichao95.github.io/2019/07/29/markdown-yu-fa/</id>
+    <published>2019-07-29T12:18:40.000Z</published>
+    <updated>2019-07-29T12:20:13.688Z</updated>
     
     <summary type="html">
     
@@ -29,10 +29,23 @@
       
         
         
-          &lt;p&gt;123&lt;/p&gt;
-
+          &lt;h1 id=&quot;这是一级标题&quot;&gt;&lt;a href=&quot;#这是一级标题&quot; class=&quot;headerlink&quot; title=&quot;这是一级标题&quot;&gt;&lt;/a&gt;这是一级标题&lt;/h1&gt;&lt;h2 id=&quot;这是二级标题&quot;&gt;&lt;a href=&quot;#这是二级标题&quot; class=&quot;headerlink&quot;
         
       
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>openstack-helm安装</title>
+    <link href="https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/"/>
+    <id>https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/</id>
+    <published>2019-07-29T12:17:41.000Z</published>
+    <updated>2019-07-29T12:17:41.774Z</updated>
+    
+    <summary type="html">
     
     </summary>
     
