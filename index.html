@@ -110,7 +110,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2019/07/29/bo-ke-da-jian-xiang-guan/" data-id="cjyp71ijm0003ywjihv2f5ex9" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2019/07/29/bo-ke-da-jian-xiang-guan/" data-id="cjyp8r7nl0003mgjia5l3dswy" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -160,7 +160,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/" data-id="cjyp71ijj0001ywjie3rwv1ez" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/" data-id="cjyp8r7nc0000mgji86v1msjo" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -211,7 +211,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/" data-id="cjyp71ijl0002ywjiy9tnw383" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/" data-id="cjyp8r7nk0002mgjivc2ua3bc" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -393,11 +393,105 @@
 <h3 id="6-超链接"><a href="#6-超链接" class="headerlink" title="6. 超链接"></a>6. 超链接</h3><p>格式如下</p>
 <pre><code>[超链接名](超链接地址 &quot;超链接title&quot;)</code></pre><p>title可加可不加<br>  举个例子：</p>
 <pre><code>[GitHub](https://github.com/)
-[Google](https://www.google.com)</code></pre><p>效果：</p>
+[Google](https://www.google.com)</code></pre><p>  效果：</p>
 <blockquote>
 <p><a href="https://github.com/" target="_blank" rel="noopener">GitHub</a><br>  <a href="https://www.google.com" target="_blank" rel="noopener">Google</a></p>
 </blockquote>
-<h2 id="基于atom打造顺手的Markdown编辑器"><a href="#基于atom打造顺手的Markdown编辑器" class="headerlink" title="基于atom打造顺手的Markdown编辑器"></a>基于atom打造顺手的Markdown编辑器</h2>
+<h3 id="7-列表"><a href="#7-列表" class="headerlink" title="7. 列表"></a>7. 列表</h3><h4 id="无序列表"><a href="#无序列表" class="headerlink" title="无序列表"></a>无序列表</h4><p>无序列表用 - + * (注意空格)。<br>  举个例子：</p>
+<pre><code>- The Fool
++ Star Platinum
+* Golden Exp</code></pre><p>  效果：</p>
+<ul>
+<li>The Fool</li>
+</ul>
+<ul>
+<li>Star Platinum</li>
+</ul>
+<ul>
+<li>Golden Exp</li>
+</ul>
+<h4 id="有序列表"><a href="#有序列表" class="headerlink" title="有序列表"></a>有序列表</h4><p>数字加点（注意空格）。<br>  举个例子：</p>
+<pre><code>1. King Crimson
+2. Aerosmith</code></pre><p>  效果：</p>
+<ol>
+<li>King Crimson</li>
+<li>Aerosmith</li>
+</ol>
+<h4 id="列表嵌套"><a href="#列表嵌套" class="headerlink" title="列表嵌套"></a>列表嵌套</h4><p>上一级和下一级之间敲三个空格即可。</p>
+<hr>
+<h3 id="8-表格"><a href="#8-表格" class="headerlink" title="8. 表格"></a>8. 表格</h3><p>格式：</p>
+<pre><code>| 表头 | 表头 | 表头 | 表头 |
+| - | :-: | -: | :-|
+| 内容 | 内容 | 内容 | 内容 |
+| 内容 | 内容 | 内容 | 内容 |
+:-:居中
+-:右对齐
+:-左对齐</code></pre><p>举个例子：</p>
+<pre><code>| Char | Stand | Power | Speed |
+| - | :-: | -: | :- |
+| Kujo Jotaro | Star Platinum | A | A |
+| Kira Yoshikage | Killer Queen| A | B |
+| Higashikata Josuke | Crazy Diamond | A | A |</code></pre><p>  效果:</p>
+<table>
+<thead>
+<tr>
+<th>Char</th>
+<th align="center">Stand</th>
+<th align="right">Power</th>
+<th align="left">Speed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kujo Jotaro</td>
+<td align="center">Star Platinum</td>
+<td align="right">A</td>
+<td align="left">A</td>
+</tr>
+<tr>
+<td>Kira Yoshikage</td>
+<td align="center">Killer Queen</td>
+<td align="right">A</td>
+<td align="left">B</td>
+</tr>
+<tr>
+<td>Higashikata Josuke</td>
+<td align="center">Crazy Diamond</td>
+<td align="right">A</td>
+<td align="left">A</td>
+</tr>
+</tbody></table>
+<p>注意：<br>  表格前一行需空出。</p>
+<hr>
+<h3 id="9-代码"><a href="#9-代码" class="headerlink" title="9. 代码"></a>9. 代码</h3><h4 id="单行代码"><a href="#单行代码" class="headerlink" title="单行代码"></a>单行代码</h4><p>代码之间分别用一个反引号`包起来。<br>  举个例子：</p>
+<pre><code>`内容`</code></pre><p>效果：<br>  <code>内容</code></p>
+<h4 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h4><p>代码之间分别用三个反引号包起来（单独占一行）。<br>举个例子：</p>
+<pre><code>
+ ```C
+
+     #include  &lt;stdio.h&gt;`
+     int main(void)`
+     {
+         printf(&quot;Hello world\n&quot;);
+     }</code></pre><pre><code>效果：
+
+```C
+
+   #include  &lt;stdio.h&gt;`
+   int main(void)`
+   {
+       printf(&quot;Hello world\n&quot;);
+   }</code></pre><hr>
+<h3 id="10-流程图"><a href="#10-流程图" class="headerlink" title="10. 流程图"></a>10. 流程图</h3><pre class=" language-flow"><code class="language-flow">st=>start: 开始
+op=>operation: My Operation
+cond=>condition: Yes or No?
+e=>end
+st->op->cond
+cond(yes)->e
+cond(no)->op
+&```
+
+## 基于atom打造顺手的Markdown编辑器</code></pre>
+
       
     </div>
 
@@ -407,7 +501,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2018/07/29/markdown-yu-fa/" data-id="cjyp71ijd0000ywji8yddvrat" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2018/07/29/markdown-yu-fa/" data-id="cjyp8r7ni0001mgjiosw86uss" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
