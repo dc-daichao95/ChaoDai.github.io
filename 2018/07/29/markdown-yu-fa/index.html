@@ -13,7 +13,7 @@
 <meta property="og:description" content="写在开头维基百科对Markdown的介绍如下：  Markdown是一种轻量级标记语言，创始人为約翰·格魯伯（英语：John Gruber）。它允许人们“使用易读易写的纯文本格式编写文档，然后转换成有效的XHTML（或者HTML）文档”。这种语言吸收了很多在电子邮件中已有的纯文本标记的特性。  由于个人对一些文档和基于Hexo的博客的需要（相较于LaTeX来写日常的文档更为简单好用），记录一下基本">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/1280px-Markdown-mark.svg.png">
-<meta property="og:updated_time" content="2019-07-30T01:51:55.475Z">
+<meta property="og:updated_time" content="2019-07-30T02:13:40.254Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Markdown语法">
 <meta name="twitter:description" content="写在开头维基百科对Markdown的介绍如下：  Markdown是一种轻量级标记语言，创始人为約翰·格魯伯（英语：John Gruber）。它允许人们“使用易读易写的纯文本格式编写文档，然后转换成有效的XHTML（或者HTML）文档”。这种语言吸收了很多在电子邮件中已有的纯文本标记的特性。  由于个人对一些文档和基于Hexo的博客的需要（相较于LaTeX来写日常的文档更为简单好用），记录一下基本">
@@ -124,22 +124,30 @@
 <h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><h4 id="四级标题"><a href="#四级标题" class="headerlink" title="四级标题"></a>四级标题</h4><h5 id="五级标题"><a href="#五级标题" class="headerlink" title="五级标题"></a>五级标题</h5><h6 id="六级标题"><a href="#六级标题" class="headerlink" title="六级标题"></a>六级标题</h6><hr>
 <h3 id="2-字体相关"><a href="#2-字体相关" class="headerlink" title="2. 字体相关"></a>2. 字体相关</h3><p>基本的字体可以进行<strong>加粗</strong>，<em>斜体</em>，<strong><em>斜体加粗</em></strong>，<del>删除线</del>，复杂的字体（<font size="2">字体大小</font>，<font color="green">字体颜色</font>，<font face="SimHei">字体格式</font>）需要嵌入html。</p>
 <ul>
-<li><p>加粗</p>
-<p>要加粗的文字左右分别用两个*号包起来</p>
+<li><p>加粗: 要加粗的文字左右分别用两个*号包起来</p>
 </li>
-<li><p>斜体</p>
-<p>要倾斜的文字左右分别用一个*号包起来</p>
+<li><p>斜体: 要倾斜的文字左右分别用一个*号包起来</p>
 </li>
-<li><p>斜体加粗</p>
-<p>要倾斜和加粗的文字左右分别用三个*号包起来</p>
+<li><p>斜体加粗: 要倾斜和加粗的文字左右分别用三个*号包起来</p>
 </li>
-<li><p>删除线</p>
-<p>要加删除线的文字左右分别用两个~~号包起来</p>
+<li><p>删除线: 要加删除线的文字左右分别用两个~~号包起来</p>
 </li>
 </ul>
 <p>举个例子：</p>
-<pre><code>**加粗** *斜体* ***斜体加粗*** ~~删除线~~ &lt;font size=&quot;2&quot;&gt;字体大小&lt;/font&gt; &lt;font color=&quot;green&quot;&gt;字体颜色&lt;/font&gt; &lt;font face=&quot;SimHei&quot;&gt;字体格式&lt;/font&gt;</code></pre><p>效果：</p>
-<p><strong>加粗</strong> <em>斜体</em> <strong><em>斜体加粗</em></strong> <del>删除线</del> <font size="2">字体大小</font> <font color="green">字体颜色</font> <font face="SimHei">字体格式</font></p>
+<pre><code>**加粗**
+*斜体*
+***斜体加粗***
+~~删除线~~
+&lt;font size=&quot;2&quot;&gt;字体大小&lt;/font&gt;
+&lt;font color=&quot;green&quot;&gt;字体颜色&lt;/font&gt;
+&lt;font face=&quot;SimHei&quot;&gt;字体格式&lt;/font&gt;</code></pre><p>效果：</p>
+<p><strong>加粗</strong></p>
+<p><em>斜体</em></p>
+<p><strong><em>斜体加粗</em></strong></p>
+<p><del>删除线</del></p>
+<p><font size="2">字体大小</font></p>
+<p><font color="green">字体颜色</font></p>
+<p><font face="SimHei">字体格式</font></p>
 <h4 id="附常见的中英文字体："><a href="#附常见的中英文字体：" class="headerlink" title="附常见的中英文字体："></a>附常见的中英文字体：</h4><p>中文</p>
 <table>
 <thead>
@@ -198,10 +206,6 @@
 <td align="center">Arial</td>
 </tr>
 <tr>
-<td align="center"><font face="Lucida Family">Lucida Family</font></td>
-<td align="center">Lucida Family</td>
-</tr>
-<tr>
 <td align="center"><font face="Verdana">Verdana</font></td>
 <td align="center">Verdana</td>
 </tr>
@@ -213,41 +217,19 @@
 <td align="center"><font face="Times New Roman">Times New Roman</font></td>
 <td align="center">Times New Roman</td>
 </tr>
-<tr>
-<td align="center"><font face="Microsoft Sans Serif">Microsoft Sans Serif</font></td>
-<td align="center">Microsoft Sans Serif</td>
-</tr>
-<tr>
-<td align="center"><font face="Tahoma">Tahoma</font></td>
-<td align="center">Tahoma</td>
-</tr>
 </tbody></table>
 <hr>
 <h3 id="3-引用"><a href="#3-引用" class="headerlink" title="3. 引用"></a>3. 引用</h3><p>在引用的文字前加&gt;，引用也可以嵌套，如加&gt;&gt;或者&gt;&gt;&gt; 。</p>
 <p>举个例子：</p>
 <pre><code>&gt;这是引用的内容
 &gt;&gt;这是引用的内容
-&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;这是引用的内容</code></pre><p>效果：</p>
+&gt;&gt;&gt;这是引用的内容</code></pre><p>效果：</p>
 <blockquote>
 <p>这是引用的内容</p>
 <blockquote>
 <p>这是引用的内容</p>
 <blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
 <p>这是引用的内容</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
 </blockquote>
 </blockquote>
 </blockquote>
@@ -262,8 +244,16 @@
 <hr>
 <h3 id="5-插入图片"><a href="#5-插入图片" class="headerlink" title="5. 插入图片"></a>5. 插入图片</h3><p>格式如下</p>
 <pre><code>![图片alt](图片地址 &quot;图片title&quot;)</code></pre><p>图片alt就是显示在图片下面的文字，相当于对图片内容的解释。图片title是图片的标题，当鼠标移到图片上时显示的内容（title可加可不加）。</p>
-<hr>
+<p>举个例子：</p>
+<pre><code>![图片_Markdownalt](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/1280px-Markdown-mark.svg.png &quot;Markdown&quot;)</code></pre><p>效果：</p>
 <p><img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/1280px-Markdown-mark.svg.png" alt="图片_Markdownalt" title="Markdown"></p>
+<hr>
+<h3 id="6-超链接"><a href="#6-超链接" class="headerlink" title="6. 超链接"></a>6. 超链接</h3><p>格式如下</p>
+<pre><code>[超链接名](超链接地址 &quot;超链接title&quot;)</code></pre><p>title可加可不加</p>
+<p>举个例子：</p>
+<pre><code>[GitHub](https://github.com/)
+[Google](https://www.google.com)</code></pre><p>效果：</p>
+<p><a href="https://github.com/" target="_blank" rel="noopener">GitHub</a><br><a href="https://www.google.com" target="_blank" rel="noopener">Google</a></p>
 <h2 id="基于atom打造顺手的Markdown编辑器"><a href="#基于atom打造顺手的Markdown编辑器" class="headerlink" title="基于atom打造顺手的Markdown编辑器"></a>基于atom打造顺手的Markdown编辑器</h2>
       
     </div>
@@ -274,7 +264,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2018/07/29/markdown-yu-fa/" data-id="cjyp61laa00004gjie975t00r" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2018/07/29/markdown-yu-fa/" data-id="cjyp6ticp0000kijinn05dyy0" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
