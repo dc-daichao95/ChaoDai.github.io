@@ -76,13 +76,13 @@
         <div class="col-sm-8 blog-main">
           
   
-    <article id="post-博客搭建相关" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-记录一个基于k8s的helm-opensatck问题" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
     
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/29/bo-ke-da-jian-xiang-guan/">博客搭建相关</a>
+      <a class="article-title" href="/2019/08/01/ji-lu-yi-ge-ji-yu-k8s-de-helm-opensatck-wen-ti/">记录一个基于k8s的helm-openstack问题</a>
     </h1>
   
 
@@ -91,7 +91,71 @@
 
   <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2019/07/29/bo-ke-da-jian-xiang-guan/" class="article-date"><time datetime="2019-07-29T13:22:01.000Z" itemprop="datePublished">2019-07-29</time></a>
+  <a href="/2019/08/01/ji-lu-yi-ge-ji-yu-k8s-de-helm-opensatck-wen-ti/" class="article-date"><time datetime="2019-08-01T07:29:01.000Z" itemprop="datePublished">2019-08-01</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="平台环境："><a href="#平台环境：" class="headerlink" title="平台环境："></a>平台环境：</h2><p>目前是在k8s环境下搭建的单master三个node节点的helm-在openstack(Ocata)</p>
+<h2 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h2><p>在K8S集群中配置的openstack环境使用novnc时（包括一体化和原生horizon）存在一定的问题，连接Novnc时会出现noVNC - Failed to connect to server (code: 1006)的错误（一般是很长时间没有使用novnc的情况下会出现此错误，正常连续点击连接novnc可正常运行）</p>
+<h2 id="目前的解决办法："><a href="#目前的解决办法：" class="headerlink" title="目前的解决办法："></a>目前的解决办法：</h2><p>如果间隔很长时间使用novnc时（使用RESTful API）会连续调用三次novnc的API并弃用前两次的结果，经验证可行。</p>
+<h2 id="目前的问题："><a href="#目前的问题：" class="headerlink" title="目前的问题："></a>目前的问题：</h2><p>希望研究清楚问题的原因，即从openstack源码角度进行分析，以及调查清楚是否是K8S环境下配置openstack导致的此异常</p>
+<h2 id="目前进展："><a href="#目前进展：" class="headerlink" title="目前进展："></a>目前进展：</h2><h3 id="步骤："><a href="#步骤：" class="headerlink" title="步骤："></a>步骤：</h3><ul>
+<li>1.通过登录<a href="http://10.141.209.208:31000" target="_blank" rel="noopener">http://10.141.209.208:31000</a> （域default, 账号admin, 密码password）打开任意虚拟机的VNC控制台（会出现10006连接失败的错误，但不是必出现，可反复在各种情况下验证为何出现）；</li>
+<li>2.然后在出现的时候连接实验室机房K8S环境master节点(10.141.209.209)获得名为openstack的namespace下的nova的pod的名字（命令kubectl get pods -n openstack| grep nova），根据名字查看nova的consoleauth和novncproxy的logs(命令kubectl logs [pods名] -n openstack)，分析日志相关内容；</li>
+<li>3.根据日志定位到nova代码中consoleauth相关的部分，可以看到consoleauth/manager.py里authorize_console等函数里的LOG.info和日志里的内容匹配，因此可以在此处加上类似的打印日志的代码用于后期定位和解决1中出现的错误；</li>
+<li>4.根据2中获得的信息可以知道nova的pods的容器在K8S的node节点(10.141.209.219)上，登录进此机器，通过docker ps | grep nova获得对应容器的具体信息，记录好容器的id，将3中修改后的文件通过docker cp或docker exec -it -u 0等方式替换容器中的内容（代码目录在容器内/var/lib/openstack/lib/python2.7/site-packages/nova/）；</li>
+<li>5.在K8S的node节点(10.141.209.219)里通过docker save备份原生的nova镜像（通过docker images | grep nova获得）,备份完后通过docker commit生成和备份的镜像同名且同标签（即tag）的镜像，此时原来的镜像的标签会变成<none>，新的镜像（目前版本的话新镜像的标签为ocata）会依赖于于旧镜像<none>，所以目前无法删除<none>标签的镜像（以后可以通过导出等其他操作而不是commit避免目前的依赖问题）；</none></none></none></li>
+<li>6.回到K8S环境master节点(10.141.209.209)，通过删除命令(kubectl delete pod [pod名]-n openstack)删除novaproxy和consoleauth相关pods, k8s集群会自动根据刚才改动的重启此时删除的pods的服务，通过1中命令重新查看pods状态直到正常；</li>
+<li>7.再回到K8S的node节点(10.141.209.219)里通过docker exec -it -u 0进入容器核实改动，此实再回到<a href="http://10.141.209.208:31000" target="_blank" rel="noopener">http://10.141.209.208:31000</a> 使之出现异常，重新类似1中操作查看日志是否出现新加入代码中加入的自定义日志信息；</li>
+<li>8.若一切正常，此时便完成了替换k8s/helm环境下pods服务的工作（nova相关的pods都是基于同一个nova镜像，所以理论上应把所有nova相关的pods删除重启保持一致，目前如果无影响可以不用），然后的工作就是进一步分析代码中的mc (即memcache)和authorize_console解决分析异常。</li>
+</ul>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://dc-daichao95.github.io/2019/08/01/ji-lu-yi-ge-ji-yu-k8s-de-helm-opensatck-wen-ti/" data-id="cjysdwe1e0005ihjikqn2c6ya" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-LaTeX相关" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/01/latex-xiang-guan/">LaTeX相关</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2019/08/01/latex-xiang-guan/" class="article-date"><time datetime="2019-08-01T07:11:38.000Z" itemprop="datePublished">2019-08-01</time></a>
 </div>
 
     
@@ -112,7 +176,58 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2019/07/29/bo-ke-da-jian-xiang-guan/" data-id="cjysc7ury0001zfjiv7mhfi4v" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2019/08/01/latex-xiang-guan/" data-id="cjysdwe1d0004ihjim185rqia" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-容器漏洞CVE-cve-2019-5736" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/">容器漏洞CVE-cve-2019-5736</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/" class="article-date"><time datetime="2019-07-27T04:17:42.000Z" itemprop="datePublished">2019-07-27</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>2019年2月11日，runC的维护团队报告了一个新发现的漏洞，该漏洞最初由Adam Iwaniuk和Borys Poplawski发现。该漏洞编号为CVE-2019-5736，漏洞影响在默认设置下运行的Docker容器，并且攻击者可以使用它来获得主机上的root级访问权限。</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://dc-daichao95.github.io/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/" data-id="cjysdwe180001ihji29y4mmei" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -132,7 +247,7 @@
     
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/29/openstack-helm-an-zhuang/">openstack-helm安装</a>
+      <a class="article-title" href="/2019/04/05/openstack-helm-an-zhuang/">openstack-helm安装</a>
     </h1>
   
 
@@ -141,7 +256,7 @@
 
   <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2019/07/29/openstack-helm-an-zhuang/" class="article-date"><time datetime="2019-07-29T12:17:41.000Z" itemprop="datePublished">2019-07-29</time></a>
+  <a href="/2019/04/05/openstack-helm-an-zhuang/" class="article-date"><time datetime="2019-04-05T12:17:41.000Z" itemprop="datePublished">2019-04-05</time></a>
 </div>
 
     
@@ -378,58 +493,7 @@ sleep 1</code></pre><h4 id="设置externet（在客户端或者dashboard）创�
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/" data-id="cjysc7us00002zfjidwrf3sg1" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-      
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-容器漏洞CVE-cve-2019-5736" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/">容器漏洞CVE-cve-2019-5736</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/" class="article-date"><time datetime="2019-07-27T04:17:42.000Z" itemprop="datePublished">2019-07-27</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>2019年2月11日，runC的维护团队报告了一个新发现的漏洞，该漏洞最初由Adam Iwaniuk和Borys Poplawski发现。该漏洞编号为CVE-2019-5736，漏洞影响在默认设置下运行的Docker容器，并且攻击者可以使用它来获得主机上的root级访问权限。</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/" data-id="cjysc7us20003zfji8e5coa8i" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2019/04/05/openstack-helm-an-zhuang/" data-id="cjysdwe1a0002ihjim1m3zs1k" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -449,7 +513,7 @@ sleep 1</code></pre><h4 id="设置externet（在客户端或者dashboard）创�
     
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/07/29/markdown-yu-fa/">Markdown语法</a>
+      <a class="article-title" href="/2018/06/03/markdown-yu-fa/">Markdown语法</a>
     </h1>
   
 
@@ -458,7 +522,7 @@ sleep 1</code></pre><h4 id="设置externet（在客户端或者dashboard）创�
 
   <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2018/07/29/markdown-yu-fa/" class="article-date"><time datetime="2018-07-29T12:18:40.000Z" itemprop="datePublished">2018-07-29</time></a>
+  <a href="/2018/06/03/markdown-yu-fa/" class="article-date"><time datetime="2018-06-03T12:18:40.000Z" itemprop="datePublished">2018-06-03</time></a>
 </div>
 
     
@@ -720,7 +784,90 @@ sleep 1</code></pre><h4 id="设置externet（在客户端或者dashboard）创�
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2018/07/29/markdown-yu-fa/" data-id="cjysc7urq0000zfjieq7i8cqg" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2018/06/03/markdown-yu-fa/" data-id="cjysdwe1c0003ihji6zuwdnzi" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+      
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-博客搭建相关" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/29/bo-ke-da-jian-xiang-guan/">博客搭建相关</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2018/05/29/bo-ke-da-jian-xiang-guan/" class="article-date"><time datetime="2018-05-29T13:22:01.000Z" itemprop="datePublished">2018-05-29</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="基于Hexo"><a href="#基于Hexo" class="headerlink" title="基于Hexo"></a>基于Hexo</h2><h4 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h4><h4 id="一些主题"><a href="#一些主题" class="headerlink" title="一些主题"></a>一些主题</h4><h4 id="更新备份"><a href="#更新备份" class="headerlink" title="更新备份"></a>更新备份</h4><h5 id="更新博客文件"><a href="#更新博客文件" class="headerlink" title="更新博客文件"></a>更新博客文件</h5><p>常规来说更新Hexo的博客只需要在修改之后，hexo clean;<br>个人觉得比较麻烦，简单写了一个shell和expect的脚本（也可以用crontab定时自动备份）</p>
+<ul>
+<li><p>syn_blog.sh</p>
+<pre class=" language-sh"><code class="language-sh">#!/bin/bash
+# 基于hexo的博客同步到github page的脚本
+blog_home="/home/dc/Workspace/blog"
+script_ge="/home/dc/Workspace/script/hexo_generate.expect"
+(cd $blog_home;hexo clean;hexo g; expect $script_ge)</code></pre>
+</li>
+<li><p>hexo_generate.expect</p>
+<pre class=" language-sh"><code class="language-sh">#!/bin/expect
+set timeout 30
+set username "XXX@XXX.com"
+set passwd "XXXXXX"
+spawn hexo d
+  expect "Username for 'https://github.com':"
+  send "$username\r"
+  expect "Password for 'https://$username@github.com':"
+  send "$passwd\r"
+  interact</code></pre>
+<h5 id="将博客目录下的源文件备份到github（虽然现在github也不稳了）"><a href="#将博客目录下的源文件备份到github（虽然现在github也不稳了）" class="headerlink" title="将博客目录下的源文件备份到github（虽然现在github也不稳了）"></a>将博客目录下的源文件备份到github（虽然现在github也不稳了）</h5><p>首先在github博客仓库下新建一个分支hexo_bak，然后git clone到本地，把.git文件夹放在博客目录下。</p>
+<pre><code>查看远程分支
+$ git branch -a
+查看本地分支
+$ git branch
+切换分支
+$ git checkout -b hexo_bak
+添加和上传文件到本地仓库
+$ git add .
+$ git commit -m &quot;infos&quot;
+上传本地仓库(本分支第一次上传)
+$ git push --set-upstream origin hexo_bak</code></pre></li>
+</ul>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="https://dc-daichao95.github.io/2018/05/29/bo-ke-da-jian-xiang-guan/" data-id="cjysdwe120000ihjiak6el55k" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -759,7 +906,7 @@ sleep 1</code></pre><h4 id="设置externet（在客户端或者dashboard）创�
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2019/07/">七月 2019</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/07/">七月 2018</a><span class="sidebar-module-list-count">1</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2019/08/">八月 2019</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2019/07/">七月 2019</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2019/04/">四月 2019</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/06/">六月 2018</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2018/05/">五月 2018</a><span class="sidebar-module-list-count">1</span></li></ul>
   </div>
 
 
@@ -770,11 +917,11 @@ sleep 1</code></pre><h4 id="设置externet（在客户端或者dashboard）创�
     <ul class="sidebar-module-list">
       
         <li>
-          <a href="/2019/07/29/bo-ke-da-jian-xiang-guan/">博客搭建相关</a>
+          <a href="/2019/08/01/ji-lu-yi-ge-ji-yu-k8s-de-helm-opensatck-wen-ti/">记录一个基于k8s的helm-openstack问题</a>
         </li>
       
         <li>
-          <a href="/2019/07/29/openstack-helm-an-zhuang/">openstack-helm安装</a>
+          <a href="/2019/08/01/latex-xiang-guan/">LaTeX相关</a>
         </li>
       
         <li>
@@ -782,7 +929,11 @@ sleep 1</code></pre><h4 id="设置externet（在客户端或者dashboard）创�
         </li>
       
         <li>
-          <a href="/2018/07/29/markdown-yu-fa/">Markdown语法</a>
+          <a href="/2019/04/05/openstack-helm-an-zhuang/">openstack-helm安装</a>
+        </li>
+      
+        <li>
+          <a href="/2018/06/03/markdown-yu-fa/">Markdown语法</a>
         </li>
       
     </ul>

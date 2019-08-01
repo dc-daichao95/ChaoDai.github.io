@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://dc-daichao95.github.io/"/>
-  <updated>2019-07-29T13:22:01.498Z</updated>
+  <updated>2019-08-01T07:34:52.886Z</updated>
   <id>https://dc-daichao95.github.io/</id>
   
   <author>
@@ -17,13 +17,21 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>博客搭建相关</title>
-    <link href="https://dc-daichao95.github.io/2019/07/29/bo-ke-da-jian-xiang-guan/"/>
-    <id>https://dc-daichao95.github.io/2019/07/29/bo-ke-da-jian-xiang-guan/</id>
-    <published>2019-07-29T13:22:01.000Z</published>
-    <updated>2019-07-29T13:22:01.498Z</updated>
+    <title>记录一个基于k8s的helm-openstack问题</title>
+    <link href="https://dc-daichao95.github.io/2019/08/01/ji-lu-yi-ge-ji-yu-k8s-de-helm-opensatck-wen-ti/"/>
+    <id>https://dc-daichao95.github.io/2019/08/01/ji-lu-yi-ge-ji-yu-k8s-de-helm-opensatck-wen-ti/</id>
+    <published>2019-08-01T07:29:01.000Z</published>
+    <updated>2019-08-01T07:34:52.886Z</updated>
     
     <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;平台环境：&quot;&gt;&lt;a href=&quot;#平台环境：&quot; class=&quot;headerlink&quot;
+        
+      
     
     </summary>
     
@@ -31,21 +39,13 @@
   </entry>
   
   <entry>
-    <title>openstack-helm安装</title>
-    <link href="https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/"/>
-    <id>https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/</id>
-    <published>2019-07-29T12:17:41.000Z</published>
-    <updated>2019-08-01T07:07:44.274Z</updated>
+    <title>LaTeX相关</title>
+    <link href="https://dc-daichao95.github.io/2019/08/01/latex-xiang-guan/"/>
+    <id>https://dc-daichao95.github.io/2019/08/01/latex-xiang-guan/</id>
+    <published>2019-08-01T07:11:38.000Z</published>
+    <updated>2019-08-01T07:11:38.918Z</updated>
     
     <summary type="html">
-    
-      
-      
-        
-        
-          &lt;h2 id=&quot;1-Helm安装&quot;&gt;&lt;a href=&quot;#1-Helm安装&quot; class=&quot;headerlink&quot; title=&quot;1. Helm安装&quot;&gt;&lt;/a&gt;1. Helm安装&lt;/h2&gt;&lt;h4 id=&quot;在连上外网的情况下：&quot;&gt;&lt;a href=&quot;#在连上外网的情况下：&quot;
-        
-      
     
     </summary>
     
@@ -75,11 +75,33 @@
   </entry>
   
   <entry>
+    <title>openstack-helm安装</title>
+    <link href="https://dc-daichao95.github.io/2019/04/05/openstack-helm-an-zhuang/"/>
+    <id>https://dc-daichao95.github.io/2019/04/05/openstack-helm-an-zhuang/</id>
+    <published>2019-04-05T12:17:41.000Z</published>
+    <updated>2019-08-01T07:09:46.570Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;1-Helm安装&quot;&gt;&lt;a href=&quot;#1-Helm安装&quot; class=&quot;headerlink&quot; title=&quot;1. Helm安装&quot;&gt;&lt;/a&gt;1. Helm安装&lt;/h2&gt;&lt;h4 id=&quot;在连上外网的情况下：&quot;&gt;&lt;a href=&quot;#在连上外网的情况下：&quot;
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>Markdown语法</title>
-    <link href="https://dc-daichao95.github.io/2018/07/29/markdown-yu-fa/"/>
-    <id>https://dc-daichao95.github.io/2018/07/29/markdown-yu-fa/</id>
-    <published>2018-07-29T12:18:40.000Z</published>
-    <updated>2019-08-01T01:53:56.901Z</updated>
+    <link href="https://dc-daichao95.github.io/2018/06/03/markdown-yu-fa/"/>
+    <id>https://dc-daichao95.github.io/2018/06/03/markdown-yu-fa/</id>
+    <published>2018-06-03T12:18:40.000Z</published>
+    <updated>2019-08-01T07:29:08.244Z</updated>
     
     <summary type="html">
     
@@ -88,6 +110,28 @@
         
         
           &lt;h2 id=&quot;写在开头&quot;&gt;&lt;a href=&quot;#写在开头&quot; class=&quot;headerlink&quot; title=&quot;写在开头&quot;&gt;&lt;/a&gt;写在开头&lt;/h2&gt;&lt;p&gt;维基百科对&lt;a href=&quot;https://zh.wikipedia.org/wiki/Markdown&quot;
+        
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>博客搭建相关</title>
+    <link href="https://dc-daichao95.github.io/2018/05/29/bo-ke-da-jian-xiang-guan/"/>
+    <id>https://dc-daichao95.github.io/2018/05/29/bo-ke-da-jian-xiang-guan/</id>
+    <published>2018-05-29T13:22:01.000Z</published>
+    <updated>2019-08-01T07:55:00.251Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;基于Hexo&quot;&gt;&lt;a href=&quot;#基于Hexo&quot; class=&quot;headerlink&quot; title=&quot;基于Hexo&quot;&gt;&lt;/a&gt;基于Hexo&lt;/h2&gt;&lt;h4 id=&quot;搭建&quot;&gt;&lt;a href=&quot;#搭建&quot; class=&quot;headerlink&quot;
         
       
     
