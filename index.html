@@ -112,7 +112,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2019/07/29/bo-ke-da-jian-xiang-guan/" data-id="cjys2zqeh0001qgjij6vqkn0x" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2019/07/29/bo-ke-da-jian-xiang-guan/" data-id="cjysc7ury0001zfjiv7mhfi4v" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -152,17 +152,13 @@
 
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="1-Helm-安装"><a href="#1-Helm-安装" class="headerlink" title="1. Helm-安装"></a>1. Helm-安装</h2><h3 id="安装helm"><a href="#安装helm" class="headerlink" title="安装helm :"></a>安装helm :</h3><p>在连上外网的情况下：</p>
-<pre><code>$ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get &gt; get_helm.sh
+        <h2 id="1-Helm安装"><a href="#1-Helm安装" class="headerlink" title="1. Helm安装"></a>1. Helm安装</h2><h4 id="在连上外网的情况下："><a href="#在连上外网的情况下：" class="headerlink" title="在连上外网的情况下："></a>在连上外网的情况下：</h4><pre><code>$ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get &gt; get_helm.sh
 $ chmod 700 get_helm.sh
-$ ./get_helm.sh</code></pre><p>无法连上外网：<br>  下载helm-v2.13.1-linux-amd64.tar.gz，解压并将helm复制到/usr/local/bin/</p>
-<pre><code>helm init --upgrade --tiller-image registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.13.1 --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts</code></pre><p>给tiller在k8s中授权：</p>
-<pre><code>kubectl create serviceaccount --namespace kube-system tiller
+$ ./get_helm.sh</code></pre><h4 id="无法连上外网："><a href="#无法连上外网：" class="headerlink" title="无法连上外网："></a>无法连上外网：</h4><p>下载helm-v2.13.1-linux-amd64.tar.gz，解压并将helm复制到/usr/local/bin/</p>
+<pre><code>helm init --upgrade --tiller-image registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.13.1 --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts</code></pre><h4 id="给tiller在k8s中授权："><a href="#给tiller在k8s中授权：" class="headerlink" title="给tiller在k8s中授权："></a>给tiller在k8s中授权：</h4><pre><code>kubectl create serviceaccount --namespace kube-system tiller
 kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-kubectl patch deploy --namespace kube-system tiller-deploy -p &#39;{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;serviceAccount&quot;:&quot;tiller&quot;}}}}&#39;</code></pre><p>安装tiller：</p>
-<pre><code>yum install socat（k8s的所有节点安装）
-helm init --upgrade</code></pre><p>看到helm和tiller两个都在运行：</p>
-<pre><code>helm version</code></pre><h2 id="建立helm的openstack-charts"><a href="#建立helm的openstack-charts" class="headerlink" title="建立helm的openstack-charts"></a>建立helm的openstack-charts</h2><p>手动建立ClusterRoleBindings：<br>  由于使用kubernetes rbac，而目前openstack helm有bug，不正确建立服务帐户的clusterRolebindings，因此要手动建立</p>
+kubectl patch deploy --namespace kube-system tiller-deploy -p &#39;{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;serviceAccount&quot;:&quot;tiller&quot;}}}}&#39;</code></pre><h4 id="安装tiller："><a href="#安装tiller：" class="headerlink" title="安装tiller："></a>安装tiller：</h4><pre><code>yum install socat（k8s的所有节点安装）
+helm init --upgrade</code></pre><h4 id="看到helm和tiller两个都在运行："><a href="#看到helm和tiller两个都在运行：" class="headerlink" title="看到helm和tiller两个都在运行："></a>看到helm和tiller两个都在运行：</h4><pre><code>helm version</code></pre><h2 id="2-建立helm的openstack-charts"><a href="#2-建立helm的openstack-charts" class="headerlink" title="2. 建立helm的openstack-charts"></a>2. 建立helm的openstack-charts</h2><h4 id="手动建立ClusterRoleBindings："><a href="#手动建立ClusterRoleBindings：" class="headerlink" title="手动建立ClusterRoleBindings："></a>手动建立ClusterRoleBindings：</h4><p>由于使用kubernetes rbac，而目前openstack helm有bug，不正确建立服务帐户的clusterRolebindings，因此要手动建立。</p>
 <pre><code>kubectl create -f &lt;(cat &lt;&lt;EOF
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
@@ -191,38 +187,27 @@ subjects:
     kind: User
     name: system:serviceaccount:openstack:default
 EOF
-)</code></pre><p>  将subject绑定到role；<br>  如上述代码，roleref是cluster-admin，一个默认admin角色，将用户User（ : system:serviceaccount:ceph:default ）绑定为此种角色</p>
-<p>添加helm的本地repo：</p>
-<pre><code>helm serve &amp;
-helm repo add local http://localhost:8879/charts</code></pre><p>从github获取charts的源码</p>
-<pre><code>git clone https://github.com/openstack/openstack-helm-infra.git
-git clone https://github.com/openstack/openstack-helm.git</code></pre><p>charts的make：<br>  cd 两个目录，make即可<br>  helm search可以看到很多local/下面的charts</p>
-<h2 id="部署coreDNS"><a href="#部署coreDNS" class="headerlink" title="部署coreDNS"></a>部署coreDNS</h2><p>需要编辑5个yaml文件（<a href="https://blog.51cto.com/ylw6006/2108426" target="_blank" rel="noopener">参考</a>）：</p>
-<pre><code>coredns-sa.yaml
+)</code></pre><p>将subject绑定到role；如上述代码，roleref是cluster-admin，一个默认admin角色，将用户User(:system:serviceaccount:ceph:default)绑定为此种角色。</p>
+<h4 id="添加helm的本地repo："><a href="#添加helm的本地repo：" class="headerlink" title="添加helm的本地repo："></a>添加helm的本地repo：</h4><pre><code>helm serve &amp;
+helm repo add local http://localhost:8879/charts</code></pre><h4 id="从github获取charts的源码"><a href="#从github获取charts的源码" class="headerlink" title="从github获取charts的源码"></a>从github获取charts的源码</h4><pre><code>git clone https://github.com/openstack/openstack-helm-infra.git
+git clone https://github.com/openstack/openstack-helm.git</code></pre><h4 id="charts的make："><a href="#charts的make：" class="headerlink" title="charts的make："></a>charts的make：</h4><p>cd 两个目录，make即可；<br>  helm search可以看到很多local/下面的charts。</p>
+<h2 id="部署coreDNS"><a href="#部署coreDNS" class="headerlink" title="部署coreDNS"></a>部署coreDNS</h2><h4 id="需要编辑5个yaml文件（参考）："><a href="#需要编辑5个yaml文件（参考）：" class="headerlink" title="需要编辑5个yaml文件（参考）："></a>需要编辑5个yaml文件（<a href="https://blog.51cto.com/ylw6006/2108426" target="_blank" rel="noopener">参考</a>）：</h4><pre><code>coredns-sa.yaml
 coredns-rbac.yaml
 coredns-configmap.yaml
 coredns-deployment.yaml
-coredns-service.yaml</code></pre><p>上面五个文件都创建</p>
-<pre><code>kubectl create -f .</code></pre><p>Debug：<br>  在coredns-deployment.yaml中，有ImagePullPolicy这个标记，有三个参数：Always 、Never 、IfNotPresent</p>
+coredns-service.yaml</code></pre><h4 id="上面五个文件都创建"><a href="#上面五个文件都创建" class="headerlink" title="上面五个文件都创建"></a>上面五个文件都创建</h4><pre><code>kubectl create -f .</code></pre><h4 id="Debug："><a href="#Debug：" class="headerlink" title="Debug："></a>Debug：</h4><p>  在coredns-deployment.yaml中，有ImagePullPolicy这个标记，有三个参数：Always 、Never 、IfNotPresent</p>
 <ul>
 <li>Always：不管镜像是否存在都会进行一次拉取。</li>
 <li>Never：不管镜像是否存在都不会进行拉取</li>
-<li>IfNotPresent：只有镜像不存在时，才会进行镜像拉取。<br> 一般默认为IfNotPresent，但:latest标签的镜像默认为Always。因为我们不连外网，所以必须修改为IfNotPresent</li>
+<li>IfNotPresent：只有镜像不存在时，才会进行镜像拉取。<br>一般默认为IfNotPresent，但:latest标签的镜像默认为Always。因为我们不连外网，所以必须修改为IfNotPresent</li>
 </ul>
-<h2 id="标记nodes"><a href="#标记nodes" class="headerlink" title="标记nodes"></a>标记nodes</h2><p>全部标记</p>
-<pre><code>kubectl label nodes ceph-osd=enabled --all
+<h2 id="标记nodes"><a href="#标记nodes" class="headerlink" title="标记nodes"></a>标记nodes</h2><h4 id="全部标记"><a href="#全部标记" class="headerlink" title="全部标记"></a>全部标记</h4><pre><code>kubectl label nodes ceph-osd=enabled --all
 kubectl label nodes ceph-mds=enabled --all
 kubectl label nodes ceph-mgr=enabled --all
 kubectl label nodes openvswitch=enabled --all
-kubectl label nodes openstack-compute-node=enabled --all</code></pre><p>如果需要删除不需要标记的：</p>
-<pre><code>kubectl label node x.x.x.x openvswitch-</code></pre><p>控制节点标记一个网络性能好的：</p>
-<pre><code>kubectl label node 10.141.209.214 openstack-control-plane=enabled</code></pre><p>Mon和rgw分别选择3个点和2个点部署</p>
-<pre><code>kubectl label node x.x.x.x ceph-mon=enabled
-kubectl label node x.x.x.x ceph-rgw=enabled</code></pre><p>查看 label：</p>
-<pre><code>单个node：kubectl label node 10.141.209.214 --list
-所有node：kubectl get nodes --show-labels=true</code></pre><p>取消master节点的taint（无法建立pod）</p>
-<pre><code>kubectl taint nodes --all node-role.kubernetes.io/master-</code></pre><h2 id="安装ceph"><a href="#安装ceph" class="headerlink" title="安装ceph"></a>安装ceph</h2><p>Ceph的安装需要四个helm的chart(ip地址为物理机地址)</p>
-<pre><code>ceph-mon
+kubectl label nodes openstack-compute-node=enabled --all</code></pre><h4 id="如果需要删除不需要标记的："><a href="#如果需要删除不需要标记的：" class="headerlink" title="如果需要删除不需要标记的："></a>如果需要删除不需要标记的：</h4><pre><code>kubectl label node x.x.x.x openvswitch-</code></pre><h4 id="控制节点标记一个网络性能好的："><a href="#控制节点标记一个网络性能好的：" class="headerlink" title="控制节点标记一个网络性能好的："></a>控制节点标记一个网络性能好的：</h4><pre><code>kubectl label node 10.141.209.214 openstack-control-plane=enabled</code></pre><h4 id="Mon和rgw分别选择3个点和2个点部署"><a href="#Mon和rgw分别选择3个点和2个点部署" class="headerlink" title="Mon和rgw分别选择3个点和2个点部署"></a>Mon和rgw分别选择3个点和2个点部署</h4><pre><code>kubectl label node x.x.x.x ceph-mon=enabled
+kubectl label node x.x.x.x ceph-rgw=enabled</code></pre><h4 id="查看-label："><a href="#查看-label：" class="headerlink" title="查看 label："></a>查看 label：</h4><pre><code>单个node：kubectl label node 10.141.209.214 --list
+所有node：kubectl get nodes --show-labels=true</code></pre><h4 id="取消master节点的taint（无法建立pod）"><a href="#取消master节点的taint（无法建立pod）" class="headerlink" title="取消master节点的taint（无法建立pod）"></a>取消master节点的taint（无法建立pod）</h4><pre><code>kubectl taint nodes --all node-role.kubernetes.io/master-</code></pre><h2 id="安装ceph"><a href="#安装ceph" class="headerlink" title="安装ceph"></a>安装ceph</h2><h4 id="Ceph的安装需要四个helm的chart-ip地址为物理机地址"><a href="#Ceph的安装需要四个helm的chart-ip地址为物理机地址" class="headerlink" title="Ceph的安装需要四个helm的chart(ip地址为物理机地址)"></a>Ceph的安装需要四个helm的chart(ip地址为物理机地址)</h4><pre><code>ceph-mon
 helm install --namespace=ceph local/ceph-mon --name=ceph-mon \
   --set endpoints.identity.namespace=openstack \
   --set endpoints.object_store.namespace=ceph \
@@ -249,8 +234,8 @@ helm install --namespace=ceph local/ceph-osd --name=ceph-osd \
   --set deployment.client_secrets=false \
   --set deployment.rgw_keystone_user_and_endpoints=false \
   --set bootstrap.enabled=true</code></pre><pre><code>cd openstack
-./tools/deployment/multinode/020-ingress.sh</code></pre><p>Ceph的安装需要四个helm的chart<br>  Ceph-client</p>
-<pre><code>helm install --namespace=ceph local/ceph-client --name=ceph-client \
+./tools/deployment/multinode/020-ingress.sh</code></pre><pre><code>Ceph-client
+helm install --namespace=ceph local/ceph-client --name=ceph-client \
   --set endpoints.identity.namespace=openstack \
   --set endpoints.object_store.namespace=ceph \
   --set endpoints.ceph_mon.namespace=ceph \
@@ -262,8 +247,8 @@ helm install --namespace=ceph local/ceph-osd --name=ceph-osd \
   --set deployment.rbd_provisioner=true \
   --set deployment.client_secrets=false \
   --set deployment.rgw_keystone_user_and_endpoints=false \
-  --set bootstrap.enabled=true</code></pre><p>  Ceph-provisioners</p>
-<pre><code>helm install --namespace=ceph local/ceph-provisioners --name=ceph-provisioners \
+  --set bootstrap.enabled=true</code></pre><pre><code>Ceph-provisioners
+helm install --namespace=ceph local/ceph-provisioners --name=ceph-provisioners \
   --set endpoints.identity.namespace=openstack \
   --set endpoints.object_store.namespace=ceph \
   --set endpoints.ceph_mon.namespace=ceph \
@@ -275,35 +260,35 @@ helm install --namespace=ceph local/ceph-osd --name=ceph-osd \
   --set deployment.rbd_provisioner=true \
   --set deployment.client_secrets=false \
   --set deployment.rgw_keystone_user_and_endpoints=false \
-  --set bootstrap.enabled=true</code></pre><p>上述四个chart按照顺序创建：</p>
-<ul>
+  --set bootstrap.enabled=true</code></pre><h4 id="上述四个chart按照顺序创建："><a href="#上述四个chart按照顺序创建：" class="headerlink" title="上述四个chart按照顺序创建："></a>上述四个chart按照顺序创建：</h4><ul>
 <li>ceph-mon</li>
 <li>ceph-osd</li>
 <li>Ceph-client</li>
 <li>Ceph-provisioners</li>
 </ul>
-<p>Debug：</p>
-<ul>
+<h4 id="Debug：-1"><a href="#Debug：-1" class="headerlink" title="Debug："></a>Debug：</h4><ul>
 <li>Ceph的启动需要rbd的内核模块<br>modprobe rbd</li>
 <li>Ceph的残余内容，key等没有删除干净导致报错<br>所有node节点的/var/lib/openstack-helm/ceph 删除干净</li>
 </ul>
 <h2 id="安装openstack（mariadb-rabbitmq基础服务）"><a href="#安装openstack（mariadb-rabbitmq基础服务）" class="headerlink" title="安装openstack（mariadb+rabbitmq基础服务）"></a>安装openstack（mariadb+rabbitmq基础服务）</h2><pre><code>cd openstack-helm
 ./tools/deployment/developer/ceph/045-ceph-ns-activate.sh(修改文件中的ip)
 ./tools/deployment/developer/ceph/050-mariadb.sh
-./tools/deployment/developer/ceph/060-rabbitmq.sh</code></pre><p>Debug：</p>
-<ul>
+./tools/deployment/developer/ceph/060-rabbitmq.sh</code></pre><h4 id="Debug：-2"><a href="#Debug：-2" class="headerlink" title="Debug："></a>Debug：</h4><ul>
 <li><p>无法挂载</p>
 <ul>
 <li>1.控制节点yum update并yum install ceph-common</li>
 <li>2.挂载找不到mon地址<br>  在物理机的/etc/hosts中添加ceph.mon 的地址<blockquote>
-<p>如：cat /etc/hosts<br>10.141.209.201 ceph-mon.ceph.svc.cluster.local</p>
+<p>如：cat /etc/hosts<br> 10.141.209.201 ceph-mon.ceph.svc.cluster.local</p>
 </blockquote>
 </li>
 </ul>
 </li>
 <li><p>Rabbitmq等待时间过短导致启动失败： epmd error for host : (non-existing domain)</p>
 <ul>
-<li>在openstack-helm-infra/rabbitmq/templates/service-discover中修改：<br>metadata中：<br>  annotations:<pre><code>service.alpha.kubernetes.io/tolerate-unready-endpoints: &quot;true&quot;</code></pre>spec中：<br>  publishNotReadyAddresses: true</li>
+<li>在openstack-helm-infra/rabbitmq/templates/service-discover中修改：<br>metadata中：<blockquote>
+<p>annotations:<br>  service.alpha.kubernetes.io/tolerate-unready-endpoints: “true”<br>spec中：<br>  publishNotReadyAddresses: true</p>
+</blockquote>
+</li>
 </ul>
 </li>
 <li><p>Rabbitmq崩溃：<br>报错同上，但是原因其实是dns无法解析，修改dns的configmap，删除proxy一行。</p>
@@ -311,33 +296,50 @@ helm install --namespace=ceph local/ceph-osd --name=ceph-osd \
 <li><p>Rabbitmq崩溃：<br>报错同上，但是原因其实是flannel网络出现问题，因为时间不同步导致renew lease时崩溃。</p>
 </li>
 </ul>
-<pre><code>cd openstack-helm-infra:
+<h2 id="安装openstack（openvswitch等准备服务"><a href="#安装openstack（openvswitch等准备服务" class="headerlink" title="安装openstack（openvswitch等准备服务)"></a>安装openstack（openvswitch等准备服务)</h2><pre><code>cd openstack-helm-infra:
 helm install --name=memcached ./memcached --namespace=openstack
 helm install --name=etcd-rabbitmq ./etcd --namespace=openstack
 helm install --name=ingress ./ingress --namespace=openstack
 helm install --name=libvirt ./libvirt --namespace=openstack
 Libvirt启动报错ERROR: libvirtd daemon already running on host
 解决方法： systemctl stop libvirtd  然后systemctl disable libvirtd关闭物理机的libvirtd服务
-helm install --name=openvswitch ./openvswitch --namespace=openstack</code></pre><pre><code>cd openstack-helm
+helm install --name=openvswitch ./openvswitch --namespace=openstack</code></pre><h2 id="安装openstack（keystone等主要服务）"><a href="#安装openstack（keystone等主要服务）" class="headerlink" title="安装openstack（keystone等主要服务）"></a>安装openstack（keystone等主要服务）</h2><pre><code>cd openstack-helm
 ./tools/deployment/multinode/080-keystone.sh
 ./tools/deployment/multinode/090-ceph-radosgateway.sh（修改文件中的ip ）
-./tools/deployment/multinode/100-glance.sh</code></pre><p>修改glance使用ceph rbd，在openstack-helm/glance/values.yaml第21行，修改为storage: rbd<br>  由于100-glance.sh文件中也有对storage的配置，必须删除 tee /tmp/glance.yaml 文件中关于覆盖values文件storage的GLANCE_BACKEND那两行。</p>
-<pre><code>./tools/deployment/developer/ceph/090-heat.sh
+./tools/deployment/multinode/100-glance.sh
+  修改glance使用ceph rbd，在openstack-helm/glance/values.yaml第21行，修改为storage: rbd
+  由于100-glance.sh文件中也有对storage的配置，必须删除 tee /tmp/glance.yaml 文件中关于覆盖values文件storage的GLANCE_BACKEND那两行。
+./tools/deployment/developer/ceph/090-heat.sh
 ./tools/deployment/developer/ceph/130-cinder.sh
-./tools/deployment/developer/ceph/100-horizon.sh</code></pre><p>/tools/deployment/developer/ceph/160-compute-kit.sh<br>160-compute-kit.sh文件的修改，需要删除一些内容<br>Nova的配置，修改nova/values.yaml文件：<br>Nova使用ceph rbd做后端，第1497行改为images_type: rbd</p>
+./tools/deployment/developer/ceph/100-h orizon.sh</code></pre><h2 id="安装openstack（nova-neutron计算服务）"><a href="#安装openstack（nova-neutron计算服务）" class="headerlink" title="安装openstack（nova+neutron计算服务）"></a>安装openstack（nova+neutron计算服务）</h2><pre><code>/tools/deployment/developer/ceph/160-compute-kit.sh
+  160-compute-kit.sh文件的修改，需要删除一些内容</code></pre><p>Nova的配置，修改nova/values.yaml文件：<br>  Nova使用ceph rbd做后端，第1497行改为images_type: rbd</p>
+<p>  <img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/1.png" alt="图一"></p>
 <p>在nova的values文件中，第203行，将30680对应的port从false改为true</p>
+<p>  <img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/2.png" alt="图二"></p>
 <p>为了方便调试，将nova的logs改为dubug模式，在第1531行， level: DEBUG</p>
+<p>  <img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/3.png" alt="图三"></p>
 <p>Vnc本身的网址是k8s内部地址，为了外部可用，在第1457行，我们添加如下字段：<br>   novncproxy_base_url: <a href="http://10.190.2.21:30680/vnc_auto.html" target="_blank" rel="noopener">http://10.190.2.21:30680/vnc_auto.html</a>   其中，IP地址是k8s集群某个主机的地址。</p>
+<p>  <img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/4.png" alt="图四"></p>
 <p>ceph的用于nova的pool vms可能需要自己手动创建</p>
 <pre><code>ceph osd pool create vms 0
 ceph osd pool ls
 ceph osd pool get-quota vms
 ceph osd pool application enable vms rbd
-ceph osd pool application get vms</code></pre><p>Neutron的配置<br>配置物理网卡，在neutron/values.yaml文件中，进行如下修改（有可用网段，用vlan作为外网的时候）：<br>network. auto_bridge_add  添加 br-physnet1: ens7f1</p>
-<p>conf. ml2_conf. plugins 取消掉队vlan的注释，并添加正确的external tag范围</p>
-<p>conf. openvswitch_agent. ovs的bridge_mappings，修改external对应的网卡</p>
+ceph osd pool application get vms</code></pre><p>Neutron的配置<br>配置物理网卡，在neutron/values.yaml文件中，进行如下修改（有可用网段，用vlan作为外网的时候）：</p>
+<ul>
+<li>network. auto_bridge_add  添加 br-physnet1: ens7f1</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/5.png" alt="图五"></p>
+<ul>
+<li>conf. ml2_conf. plugins 取消掉队vlan的注释，并添加正确的external tag范围</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/6.png" alt="图六"></p>
+<ul>
+<li>conf. openvswitch_agent. ovs的bridge_mappings，修改external对应的网卡</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/7.png" alt="图七"></p>
 <p>Neutron服务报错：<br>It may be the case that bridge and/or br_netfilter kernel modules are not loaded.<br>解决方法：重新编译centos的内核，需要版本新一点，我使用的是3.10.957的内核。</p>
-<p>非必要）如果没有外网资源需要使用网桥：<br>在有l3-agent的node节点，建立gateway.sh；文件内容如下，并运行（没有可用网段，只能使用自定义的外网的时候）</p>
+<h2 id="使用openstack"><a href="#使用openstack" class="headerlink" title="使用openstack"></a>使用openstack</h2><h4 id="非必要）如果没有外网资源需要使用网桥："><a href="#非必要）如果没有外网资源需要使用网桥：" class="headerlink" title="(非必要）如果没有外网资源需要使用网桥："></a>(非必要）如果没有外网资源需要使用网桥：</h4><p>在有l3-agent的node节点，建立gateway.sh；文件内容如下，并运行（没有可用网段，只能使用自定义的外网的时候）</p>
 <pre><code>#!/bin/bash
 set -xe
 
@@ -356,12 +358,16 @@ sudo iptables -P FORWARD ACCEPT
 DEFAULT_ROUTE_DEV=&quot;$(sudo ip -4 route list 0/0 | awk &#39;{ print $5; exit }&#39;)&quot;
 #DEFAULT_ROUTE_DEV=&quot;em2&quot;
 sudo iptables -t nat -A POSTROUTING -o ${DEFAULT_ROUTE_DEV} -s ${OSH_EXT_SUBNET} -j MASQUERADE
-sleep 1</code></pre><h2 id="使用openstack"><a href="#使用openstack" class="headerlink" title="使用openstack"></a>使用openstack</h2><p>设置externet（在客户端或者dashboard）<br>    创建外部网络：</p>
-<p>使用openstack的虚拟机<br>首先安全组需要设置，一般加入以下四个规则</p>
-<p>创建实例时创建ssh的key，并下载，比如ssh-key.pem<br>创建实例选择配置驱动<br>因为ssh-key.pem文件的权限为644，无法登陆，用chmod将权限改为500<br>使用ssh -i ssh-key.pem <a href="mailto:ubuntu@10.190.8.107" target="_blank" rel="noopener">ubuntu@10.190.8.107</a> 即可登陆</p>
+sleep 1</code></pre><h4 id="设置externet（在客户端或者dashboard）创建外部网络："><a href="#设置externet（在客户端或者dashboard）创建外部网络：" class="headerlink" title="设置externet（在客户端或者dashboard）创建外部网络："></a>设置externet（在客户端或者dashboard）创建外部网络：</h4><p><img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/8.png" alt="图八"></p>
+<p><img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/9.png" alt="图九"><br><img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/10.png" alt="图十"></p>
+<h4 id="使用openstack的虚拟机"><a href="#使用openstack的虚拟机" class="headerlink" title="使用openstack的虚拟机"></a>使用openstack的虚拟机</h4><p>首先安全组需要设置，一般加入以下四个规则</p>
+<p><img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/12.png" alt="图十二"></p>
+<p>  创建实例时创建ssh的key，并下载，比如ssh-key.pem<br>  创建实例选择配置驱动<br>  因为ssh-key.pem文件的权限为644，无法登陆，用chmod将权限改为500<br>  使用ssh -i ssh-key.pem <a href="mailto:ubuntu@10.190.8.107" target="_blank" rel="noopener">ubuntu@10.190.8.107</a> 即可登陆</p>
 <p>在浏览器中访问集群中任一节点的ip:31000；</p>
-<p>主机管理如下：可以统计所有的计算节点</p>
-<p>其他debug：<br>Nova-compute服务出错，表现为dashboard虚拟机管理器这个节点：<br>Log报错如图<br>解决方法：自己mkdir 相应instances，touch一个disk.config文件，即可。</p>
+<p>主机管理：可以统计所有的计算节点</p>
+<h4 id="其他debug："><a href="#其他debug：" class="headerlink" title="其他debug："></a>其他debug：</h4><p>Nova-compute服务出错，表现为dashboard虚拟机管理器这个节点：<br>  Log报错如图</p>
+<p><img src="https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/11.png" alt="图十一"></p>
+<p>解决方法：自己mkdir 相应instances，touch一个disk.config文件，即可。</p>
 
       
     </div>
@@ -372,7 +378,7 @@ sleep 1</code></pre><h2 id="使用openstack"><a href="#使用openstack" class="h
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/" data-id="cjys2zqek0003qgjizxzozf2b" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/" data-id="cjysc7us00002zfjidwrf3sg1" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -423,7 +429,7 @@ sleep 1</code></pre><h2 id="使用openstack"><a href="#使用openstack" class="h
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/" data-id="cjys2zqei0002qgji16qt5ekg" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2019/07/27/rong-qi-lou-dong-cve-cve-2019-5736/" data-id="cjysc7us20003zfji8e5coa8i" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -714,7 +720,7 @@ sleep 1</code></pre><h2 id="使用openstack"><a href="#使用openstack" class="h
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2018/07/29/markdown-yu-fa/" data-id="cjys2zqeb0000qgjisfpdnb1q" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2018/07/29/markdown-yu-fa/" data-id="cjysc7urq0000zfjieq7i8cqg" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
