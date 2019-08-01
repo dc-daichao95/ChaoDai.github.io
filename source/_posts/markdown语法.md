@@ -38,35 +38,36 @@ tags:
 
 ### 2. 字体相关
 基本的字体可以进行**加粗**，*斜体*，***斜体加粗***，~~删除线~~，复杂的字体（<font size="2">字体大小</font>，<font color="green">字体颜色</font>，<font face="SimHei">字体格式</font>）需要嵌入html。
-+ 加粗
++ 加粗: 要加粗的文字左右分别用两个*号包起来
 
-  要加粗的文字左右分别用两个*号包起来
++ 斜体: 要倾斜的文字左右分别用一个*号包起来
 
-+ 斜体
++ 斜体加粗: 要倾斜和加粗的文字左右分别用三个*号包起来
 
-  要倾斜的文字左右分别用一个*号包起来
-
-+ 斜体加粗
-
-  要倾斜和加粗的文字左右分别用三个*号包起来
-
-+ 删除线
-
-  要加删除线的文字左右分别用两个~~号包起来
++ 删除线: 要加删除线的文字左右分别用两个~~号包起来
 
 举个例子：
 
 ```
-**加粗** *斜体* ***斜体加粗*** ~~删除线~~ <font size="2">字体大小</font> <font color="green">字体颜色</font> <font face="SimHei">字体格式</font>
+**加粗**
+*斜体*
+***斜体加粗***
+~~删除线~~
+<font size="2">字体大小</font>
+<font color="green">字体颜色</font>
+<font face="SimHei">字体格式</font>
 ```
 
 效果：
+>**加粗**
+  *斜体*
+  ***斜体加粗***
+  ~~删除线~~
+  <font size="2">字体大小</font>
+  <font color="green">字体颜色</font>
+  <font face="SimHei">字体格式</font>
 
-**加粗** *斜体* ***斜体加粗*** ~~删除线~~ <font size="2">字体大小</font> <font color="green">字体颜色</font> <font face="SimHei">字体格式</font>
-
-#### 附常见的中英文字体：
-
-中文
+附常见的中英文字体：
 
 | 字体 | 名字 |
 | :-: | :-: |
@@ -79,18 +80,14 @@ tags:
 | <font face="SimHei">黑体</font> | SimHei |
 | <font face="Microsoft YaHei">微软雅黑体</font> | Microsoft YaHei |
 
-英文
-
 | Font | Face |
 | :-: | :-: |
 | <font face="Helvetica">Helvetica</font> | Helvetica |
 | <font face="Arial">Arial</font> | Arial |
-| <font face="Lucida Family">Lucida Family</font> | Lucida Family |
 | <font face="Verdana">Verdana</font> | Verdana |
 | <font face="Impact">Impact</font> | Impact |
 | <font face="Times New Roman">Times New Roman</font> | Times New Roman |
-| <font face="Microsoft Sans Serif">Microsoft Sans Serif</font> | Microsoft Sans Serif |
-| <font face="Tahoma">Tahoma</font> | Tahoma |
+
 
 
 -----
@@ -103,14 +100,14 @@ tags:
 ```
 >这是引用的内容
 >>这是引用的内容
->>>>>>>>>>这是引用的内容
+>>>这是引用的内容
 ```
 
 效果：
 
 >这是引用的内容
 >>这是引用的内容
->>>>>>>>>>这是引用的内容
+>>>这是引用的内容
 
 ----
 
@@ -136,11 +133,147 @@ tags:
 
 格式如下
 ```
-![图片alt](图片地址 ''图片title'')
+![图片alt](图片地址 "图片title")
 ```
 图片alt就是显示在图片下面的文字，相当于对图片内容的解释。图片title是图片的标题，当鼠标移到图片上时显示的内容（title可加可不加）。
 
-![图片alt]( ''图片title'')
+举个例子：
 
+```
+![Markdown](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/1280px-Markdown-mark.svg.png "Markdown")
+```
+
+效果：
+
+![图片_Markdownalt](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/1280px-Markdown-mark.svg.png "Markdown")
+
+---
+
+### 6. 超链接
+格式如下
+```
+[超链接名](超链接地址 "超链接title")
+```
+title可加可不加
+  举个例子：
+```
+[GitHub](https://github.com/)
+[Google](https://www.google.com)
+```
+  效果：
+>[GitHub](https://github.com/)
+  [Google](https://www.google.com)
+
+### 7. 列表
+#### 无序列表
+无序列表用 - + * (注意空格)。
+  举个例子：
+```
+- The Fool
++ Star Platinum
+* Golden Exp
+```
+  效果：
+- The Fool
++ Star Platinum
+* Golden Exp
+
+#### 有序列表
+数字加点（注意空格）。
+  举个例子：
+```
+1. King Crimson
+2. Aerosmith
+```
+  效果：
+1. King Crimson
+2. Aerosmith
+
+#### 列表嵌套
+上一级和下一级之间敲三个空格即可。
+
+----
+
+### 8. 表格
+格式：
+```
+| 表头 | 表头 | 表头 | 表头 |
+| - | :-: | -: | :-|
+| 内容 | 内容 | 内容 | 内容 |
+| 内容 | 内容 | 内容 | 内容 |
+:-:居中
+-:右对齐
+:-左对齐
+```
+
+举个例子：
+```
+| Char | Stand | Power | Speed |
+| - | :-: | -: | :- |
+| Kujo Jotaro | Star Platinum | A | A |
+| Kira Yoshikage | Killer Queen| A | B |
+| Higashikata Josuke | Crazy Diamond | A | A |
+```
+  效果:
+
+| Char | Stand | Power | Speed |
+| - | :-: | -: | :- |
+| Kujo Jotaro | Star Platinum | A | A |
+| Kira Yoshikage | Killer Queen| A | B |
+| Higashikata Josuke | Crazy Diamond | A | A |
+
+注意：
+  表格前一行需空出。
+
+-----
+
+### 9. 代码
+#### 单行代码
+代码之间分别用一个反引号`包起来。
+  举个例子：
+```
+`内容`
+```
+效果：
+  `内容`
+
+#### 代码块
+代码之间分别用三个反引号包起来，三个反引号单独占一行(头反引号加上语言可以实现语法高亮）。
+  举个例子：
+```
+(```cpp
+     加个了一个括号防止转义
+     #include  <stdio.h>
+     int main(void)`
+     {
+         printf("Hello world\n");
+     }
+(```
+```
+效果：
+
+```cpp
+   #include  <stdio.h>
+   int main(void)
+   {
+       printf("Hello world\n");
+   }
+```
+
+----
 
 ## 基于atom打造顺手的Markdown编辑器
+### 1. 安装Atom
+下载安装[Atom](https://atom.io/)
+
+### 2. 有关Markdown的拓展
++ markdown-preview-plus
+markdown-preview-plus对markdown-preview做了功能扩展和增强（需关闭markdown-preview）。
+   + 持预览实时渲染。(Ctrl + Shift + M)
+   + 支持Latex公式。(Ctrl + Shift + X)
+
++ markdown-table-editor
+更方便的编辑Markdown的表格
+
++ markdown-themeable-pdf、pdf-view
+提供pdf导出和预览功能
