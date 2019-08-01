@@ -291,23 +291,28 @@ cd openstack-helm
 ./tools/deployment/developer/ceph/100-h orizon.sh
 ```
 
-
+## 安装openstack（nova+neutron计算服务）
+```
 /tools/deployment/developer/ceph/160-compute-kit.sh
-160-compute-kit.sh文件的修改，需要删除一些内容
+  160-compute-kit.sh文件的修改，需要删除一些内容
+```
 Nova的配置，修改nova/values.yaml文件：
-Nova使用ceph rbd做后端，第1497行改为images_type: rbd
+  Nova使用ceph rbd做后端，第1497行改为images_type: rbd
 
+  ![图一](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/1.png)
 
 在nova的values文件中，第203行，将30680对应的port从false改为true
 
+  ![图二](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/2.png)
 
 为了方便调试，将nova的logs改为dubug模式，在第1531行， level: DEBUG
 
+  ![图三](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/3.png)
 
 Vnc本身的网址是k8s内部地址，为了外部可用，在第1457行，我们添加如下字段：
    novncproxy_base_url: http://10.190.2.21:30680/vnc_auto.html   其中，IP地址是k8s集群某个主机的地址。
 
-
+  ![图四](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/4.png)
 
 ceph的用于nova的pool vms可能需要自己手动创建
 ```
@@ -318,24 +323,26 @@ ceph osd pool application enable vms rbd
 ceph osd pool application get vms
 ```
 
-
 Neutron的配置
 配置物理网卡，在neutron/values.yaml文件中，进行如下修改（有可用网段，用vlan作为外网的时候）：
-network. auto_bridge_add  添加 br-physnet1: ens7f1
++ network. auto_bridge_add  添加 br-physnet1: ens7f1
 
+![图五](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/5.png)
 
++ conf. ml2_conf. plugins 取消掉队vlan的注释，并添加正确的external tag范围
 
-conf. ml2_conf. plugins 取消掉队vlan的注释，并添加正确的external tag范围
+![图六](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/6.png)
 
++ conf. openvswitch_agent. ovs的bridge_mappings，修改external对应的网卡
 
-conf. openvswitch_agent. ovs的bridge_mappings，修改external对应的网卡
+![图七](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/7.png)
 
 Neutron服务报错：
 It may be the case that bridge and/or br_netfilter kernel modules are not loaded.
 解决方法：重新编译centos的内核，需要版本新一点，我使用的是3.10.957的内核。
 
-
-(非必要）如果没有外网资源需要使用网桥：
+## 使用openstack
+#### (非必要）如果没有外网资源需要使用网桥：
 在有l3-agent的node节点，建立gateway.sh；文件内容如下，并运行（没有可用网段，只能使用自定义的外网的时候）
 ```
 #!/bin/bash
@@ -359,25 +366,31 @@ sudo iptables -t nat -A POSTROUTING -o ${DEFAULT_ROUTE_DEV} -s ${OSH_EXT_SUBNET}
 sleep 1
 ```
 
-## 使用openstack
-设置externet（在客户端或者dashboard）
-	创建外部网络：
+#### 设置externet（在客户端或者dashboard）创建外部网络：
 
-使用openstack的虚拟机
+![图八](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/8.png)
+
+![图九](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/9.png)
+![图十](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/10.png)
+
+#### 使用openstack的虚拟机
 首先安全组需要设置，一般加入以下四个规则
 
+![图十二](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/12.png)
 
-
-创建实例时创建ssh的key，并下载，比如ssh-key.pem
-创建实例选择配置驱动
-因为ssh-key.pem文件的权限为644，无法登陆，用chmod将权限改为500
-使用ssh -i ssh-key.pem ubuntu@10.190.8.107 即可登陆
+  创建实例时创建ssh的key，并下载，比如ssh-key.pem
+  创建实例选择配置驱动
+  因为ssh-key.pem文件的权限为644，无法登陆，用chmod将权限改为500
+  使用ssh -i ssh-key.pem ubuntu@10.190.8.107 即可登陆
 
 在浏览器中访问集群中任一节点的ip:31000；
 
-主机管理如下：可以统计所有的计算节点
+主机管理：可以统计所有的计算节点
 
-其他debug：
+#### 其他debug：
 Nova-compute服务出错，表现为dashboard虚拟机管理器这个节点：
-Log报错如图
+  Log报错如图
+
+![图十一](https://raw.githubusercontent.com/dc-daichao95/dc-daichao95.github.io/hexo_bak/static/img/helm-openstack/11.png)
+
 解决方法：自己mkdir 相应instances，touch一个disk.config文件，即可。
