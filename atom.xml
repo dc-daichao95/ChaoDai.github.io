@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>博客</title>
+  <title>Blog</title>
   
   <subtitle>记录一些东西</subtitle>
   <link href="/atom.xml" rel="self"/>
@@ -35,7 +35,7 @@
     <link href="https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/"/>
     <id>https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/</id>
     <published>2019-07-29T12:17:41.000Z</published>
-    <updated>2019-08-01T01:04:24.827Z</updated>
+    <updated>2019-08-01T02:04:47.366Z</updated>
     
     <summary type="html">
     
@@ -43,8 +43,7 @@
       
         
         
-          &lt;p&gt;##Helm-安装&lt;br&gt;建立helm的openstack-charts&lt;br&gt;部署coreDNS&lt;br&gt;标记nodes&lt;br&gt;部署ceph&lt;br&gt;部署openstack&lt;br&gt;使用openstack&lt;/p&gt;
-
+          &lt;h2 id=&quot;1-Helm-安装&quot;&gt;&lt;a href=&quot;#1-Helm-安装&quot; class=&quot;headerlink&quot; title=&quot;1. Helm-安装&quot;&gt;&lt;/a&gt;1. Helm-安装&lt;/h2&gt;&lt;h3 id=&quot;安装helm&quot;&gt;&lt;a href=&quot;#安装helm&quot;
         
       
     
@@ -80,7 +79,7 @@
     <link href="https://dc-daichao95.github.io/2018/07/29/markdown-yu-fa/"/>
     <id>https://dc-daichao95.github.io/2018/07/29/markdown-yu-fa/</id>
     <published>2018-07-29T12:18:40.000Z</published>
-    <updated>2019-08-01T01:52:07.716Z</updated>
+    <updated>2019-08-01T01:53:56.901Z</updated>
     
     <summary type="html">
     

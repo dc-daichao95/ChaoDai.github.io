@@ -3,21 +3,21 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>openstack-helm安装 | 博客</title>
+  <title>openstack-helm安装 | Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="##Helm-安装建立helm的openstack-charts部署coreDNS标记nodes部署ceph部署openstack使用openstack">
+  <meta name="description" content="1. Helm-安装安装helm :在连上外网的情况下： $ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get &amp;gt; get_helm.sh $ chmod 700 get_helm.sh $ ./get_helm.sh无法连上外网：  下载helm-v2.13.1-linux-amd64.tar.gz，解压">
 <meta property="og:type" content="article">
 <meta property="og:title" content="openstack-helm安装">
 <meta property="og:url" content="https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/index.html">
-<meta property="og:site_name" content="博客">
-<meta property="og:description" content="##Helm-安装建立helm的openstack-charts部署coreDNS标记nodes部署ceph部署openstack使用openstack">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="1. Helm-安装安装helm :在连上外网的情况下： $ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get &amp;gt; get_helm.sh $ chmod 700 get_helm.sh $ ./get_helm.sh无法连上外网：  下载helm-v2.13.1-linux-amd64.tar.gz，解压">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-08-01T01:04:24.827Z">
+<meta property="og:updated_time" content="2019-08-01T02:04:47.366Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="openstack-helm安装">
-<meta name="twitter:description" content="##Helm-安装建立helm的openstack-charts部署coreDNS标记nodes部署ceph部署openstack使用openstack">
+<meta name="twitter:description" content="1. Helm-安装安装helm :在连上外网的情况下： $ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get &amp;gt; get_helm.sh $ chmod 700 get_helm.sh $ ./get_helm.sh无法连上外网：  下载helm-v2.13.1-linux-amd64.tar.gz，解压">
   
-    <link rel="alternate" href="/atom.xml" title="博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="Blog" type="application/atom+xml">
   
   
   
@@ -70,7 +70,7 @@
 
   <div class="container">
     <div class="blog-header">
-  <h1 class="blog-title">博客</h1>
+  <h1 class="blog-title">Blog</h1>
   
     <p class="lead blog-description">记录一些东西</p>
   
@@ -104,7 +104,22 @@
 
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##Helm-安装<br>建立helm的openstack-charts<br>部署coreDNS<br>标记nodes<br>部署ceph<br>部署openstack<br>使用openstack</p>
+        <h2 id="1-Helm-安装"><a href="#1-Helm-安装" class="headerlink" title="1. Helm-安装"></a>1. Helm-安装</h2><h3 id="安装helm"><a href="#安装helm" class="headerlink" title="安装helm :"></a>安装helm :</h3><p>在连上外网的情况下：</p>
+<pre><code>$ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get &gt; get_helm.sh
+$ chmod 700 get_helm.sh
+$ ./get_helm.sh</code></pre><p>无法连上外网：<br>  下载helm-v2.13.1-linux-amd64.tar.gz，解压并将里面的helm复制到/usr/local/bin/下</p>
+<pre><code>helm init --upgrade --tiller-image registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.13.1 --stable-repo-url https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts</code></pre><p>给tiller在k8s中授权：</p>
+<pre><code>kubectl create serviceaccount --namespace kube-system tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+kubectl patch deploy --namespace kube-system tiller-deploy -p &#39;{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;serviceAccount&quot;:&quot;tiller&quot;}}}}&#39;</code></pre><p>安装tiller：</p>
+<pre><code>yum install socat（k8s的所有节点安装）
+helm init --upgrade</code></pre><p>可以看到helm和tiller两个都在运行</p>
+<pre><code>helm version</code></pre><p>##建立helm的openstack-charts</p>
+<p>##部署coreDNS</p>
+<p>##标记nodes</p>
+<p>##部署ceph</p>
+<p>##部署openstack</p>
+<p>##使用openstack</p>
 
       
     </div>
@@ -115,7 +130,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/" data-id="cjys0xiq100014ejiwu2bzavk" class="article-share-link">
+      <a data-url="https://dc-daichao95.github.io/2019/07/29/openstack-helm-an-zhuang/" data-id="cjys1dula00000sjib0t573xk" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
